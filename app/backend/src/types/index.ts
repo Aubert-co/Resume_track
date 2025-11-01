@@ -13,3 +13,17 @@ export type IncreaseAcess ={
     vacancy_id:number
     source?:string | null
 }
+
+export type CreateVacancyDTO = {
+    linkVacancy:string,
+    description:string,
+    resume_used:string,
+    vacancy_level:string,
+    status:string
+}
+
+export type CreateAcessDTO ={
+    original_link:string,
+    vacancy_id:number,
+    new_link:string
+}
