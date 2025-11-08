@@ -4,6 +4,7 @@ import { Repository } from "./repository";
 import { Service } from "./service";
 import { Database } from "./database/db";
 import path from "path";
+import cors from 'cors'
 const db = new Database()
 
 const repository = new Repository(db)
@@ -11,6 +12,10 @@ const service = new Service(repository)
 
 const app = express()
 const publicPath = path.join(__dirname,'..', "public");
+
+app.use(cors({
+  methods: ['GET', 'POST', 'PUT', 'DELETE'],
+}));
 
 app.get('/*splat',(req,res)=>{
     res.sendFile(publicPath+'/index.html')
