@@ -5,7 +5,8 @@ export type Vacancies = {
     resume_used:string,
     vacancy_level:string,
     status:string,
-    created_at:string
+    created_at:string,
+    plataform:string
 }
 
 
@@ -19,11 +20,13 @@ export type CreateVacancyDTO = {
     description:string,
     resume_used:string,
     vacancy_level:string,
-    status:string
+    status:string,
+    plataform:string
 }
 
 export type CreateAcessDTO ={
     original_link:string,
     vacancy_id:number,
-    new_link:string
+    code:string,
+    link_label:string
 }

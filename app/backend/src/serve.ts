@@ -1,28 +1,58 @@
 import express, { ErrorRequestHandler, NextFunction, Request, Response } from "express";
-import { encodeId } from "constants/decodeUrl";
+import { encodeId ,decodeId} from "constants/decodeUrl";
 import { Repository } from "repository";
 import { Service } from "service";
 import { Database } from "database/db";
-
+import path from "path";
 const db = new Database()
 
 const repository = new Repository(db)
 const service = new Service(repository)
+
 const app = express()
+const publicPath = path.join(__dirname,'..', "public");
 
+app.get('/*splat',(req,res)=>{
+    res.sendFile(publicPath+'/index.html')
+})
 
-app.post('/generate-link',async(req:Request,res:Response,next:NextFunction)=>{
+app.post('/create/vacancy',async(req:Request,res:Response,next:NextFunction)=>{
     try{
-        const {vacancy_id,original_link} =  req.body
-        if(!vacancy_id)return res.status(400).send({message:'vacancy id cannot be null'})
-        if(!original_link)return res.status(400).send({message:'original_link cannot be null'})
+        const {vacancy_level,link_vacancy,status,plataform,description,resume_used}  =req.body
         
-        await service.createAcessLink(Number(vacancy_id),original_link)
+        if (!link_vacancy) return res.status(400).json({ message: 'Link vacancy is required.' });
+        if (!vacancy_level) return res.status(400).json({ message: 'Vacancy level is required.' });
+        if (!status) return res.status(400).json({ message: 'Status is required.' });
+        if (!plataform) return res.status(400).json({ message: 'Plataform is required.' });
+        if (!description) return res.status(400).json({ message: 'Description is required.' });
+        if (!resume_used) return res.status(400).json({ message: 'Resume used is required.' });
+        
+        await service.createVacancy({
+            vacancy_level,linkVacancy:link_vacancy,
+            status,plataform,description,resume_used
+        })
         res.status(201).send({message:'sucess'})
     }catch(err:unknown){
         next(err)
     }
 })
+app.post('/generate-link',async(req:Request,res:Response,next:NextFunction)=>{
+    try{
+        const {vacancy_id,original_link,link_label} =  req.body
+        if (!vacancy_id) return res.status(400).json({ error: 'Missing vacancy_id' });
+        if (!original_link) return res.status(400).json({ error: 'Missing original_link' });
+
+        
+        await service.createAcessLink({
+            link_label,
+            original_link,
+            vacancy_id,
+        })
+        res.status(201).send({message:'sucess'})
+    }catch(err:unknown){
+        next(err)
+    }
+})  
 app.get('/resumes',async(req:Request,res:Response,next:NextFunction)=>{
     try{
         const datas = await service.selectVacancies()
@@ -33,9 +63,19 @@ app.get('/resumes',async(req:Request,res:Response,next:NextFunction)=>{
 })
 app.get('/count/access',async(req:Request,res:Response,next:NextFunction)=>{
     try{
-        const datas = await service.countAcessWithNoregister()
+        const datas = await service.countAccessedLinks()
     
         res.status(200).send({message:'success',datas})
+    }catch(err:unknown){
+        next(err)
+    }
+})
+app.get('/get/links/:link',async(req:Request,res:Response,next:NextFunction)=>{
+    try{
+        const links = req.params.link
+        if(!links)return res.status(400).send({message:'link is required'})
+        const datas = await service.selectLinks( Number(links) )
+        res.status(200).send({message:'succes',datas})
     }catch(err:unknown){
         next(err)
     }
@@ -47,6 +87,7 @@ app.use((error:ErrorRequestHandler,req:Request,res:Response)=>{
     }
     res.status(500).send({message:'unknown error'})
 })
+ 
 app.listen(3000,()=>{
     console.log('running')
 })

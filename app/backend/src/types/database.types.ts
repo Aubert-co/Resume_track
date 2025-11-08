@@ -7,9 +7,10 @@ export type CountQuery = {
 export type SelectLink = {
    id:number,
    vacancy_id:number,
-   new_link:string,
+   link_label:string,
    original_link:string,
-   created_at:string
+   created_at:string,
+   code:string
 }
 
 export type CountAccess = {
@@ -17,7 +18,5 @@ export type CountAccess = {
 }
 
 export type VacanciesWithLinks =Vacancies & {
-   new_link:string,
-   original_link:string,
    total_accesses:number
 }
