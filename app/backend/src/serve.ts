@@ -1,8 +1,8 @@
 import express, { ErrorRequestHandler, NextFunction, Request, Response } from "express";
-import { encodeId ,decodeId} from "constants/decodeUrl";
-import { Repository } from "repository";
-import { Service } from "service";
-import { Database } from "database/db";
+
+import { Repository } from "./repository";
+import { Service } from "./service";
+import { Database } from "./database/db";
 import path from "path";
 const db = new Database()
 
@@ -88,6 +88,6 @@ app.use((error:ErrorRequestHandler,req:Request,res:Response)=>{
     res.status(500).send({message:'unknown error'})
 })
  
-app.listen(3000,()=>{
+app.listen(process.env.PORT,()=>{
     console.log('running')
 })

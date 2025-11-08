@@ -4,9 +4,9 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
-const repository_1 = require("repository");
-const service_1 = require("service");
-const db_1 = require("database/db");
+const repository_1 = require("./repository");
+const service_1 = require("./service");
+const db_1 = require("./database/db");
 const path_1 = __importDefault(require("path"));
 const db = new db_1.Database();
 const repository = new repository_1.Repository(db);
@@ -96,6 +96,6 @@ app.use((error, req, res) => {
     }
     res.status(500).send({ message: 'unknown error' });
 });
-app.listen(3000, () => {
+app.listen(process.env.PORT, () => {
     console.log('running');
 });
