@@ -8,11 +8,15 @@ const repository_1 = require("./repository");
 const service_1 = require("./service");
 const db_1 = require("./database/db");
 const path_1 = __importDefault(require("path"));
+const cors_1 = __importDefault(require("cors"));
 const db = new db_1.Database();
 const repository = new repository_1.Repository(db);
 const service = new service_1.Service(repository);
 const app = (0, express_1.default)();
 const publicPath = path_1.default.join(__dirname, '..', "public");
+app.use((0, cors_1.default)({
+    methods: ['GET', 'POST', 'PUT', 'DELETE'],
+}));
 app.get('/*splat', (req, res) => {
     res.sendFile(publicPath + '/index.html');
 });
