@@ -13,10 +13,8 @@
     "ts-node-dev": "^2.0.0"
   },
   "scripts": {
-    "dev": "ts-node-dev -r tsconfig-paths/register src/serve.ts --noEmit",
-    "start": "node dist/serve.js",
-    "test": "jest --watchAll --colors --verbose --detectOpenHandles /tests",
-    "build": "tsc --project ./tsconfig.json"
+    "start": "node dist/serve.js"
+    
   },
   "devDependencies": {
     "@types/cors": "^2.8.19",
