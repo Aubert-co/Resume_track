@@ -17,6 +17,8 @@ const publicPath = path_1.default.join(__dirname, '..', "public");
 app.use((0, cors_1.default)({
     methods: ['GET', 'POST', 'PUT', 'DELETE'],
 }));
+app.use(express_1.default.json());
+app.use(express_1.default.static(publicPath));
 app.get('/*splat', (req, res) => {
     res.sendFile(publicPath + '/index.html');
 });
@@ -93,7 +95,7 @@ app.get('/get/links/:link', async (req, res, next) => {
         next(err);
     }
 });
-app.use((error, req, res) => {
+app.use((error, req, res, next) => {
     if (error instanceof Error) {
         res.status(500).send({ message: error.message });
         return;
@@ -101,5 +103,5 @@ app.use((error, req, res) => {
     res.status(500).send({ message: 'unknown error' });
 });
 app.listen(process.env.PORT, () => {
-    console.log('running');
+    console.log('running', process.env.PORT);
 });

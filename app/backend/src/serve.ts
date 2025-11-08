@@ -16,8 +16,10 @@ const publicPath = path.join(__dirname,'..', "public");
 app.use(cors({
   methods: ['GET', 'POST', 'PUT', 'DELETE'],
 }));
-
-app.get('/*splat',(req,res)=>{
+app.use(express.json())
+app.use(express.static(publicPath));
+app.get('/*splat',(req:Request,res:Response)=>{
+    
     res.sendFile(publicPath+'/index.html')
 })
 
@@ -85,7 +87,7 @@ app.get('/get/links/:link',async(req:Request,res:Response,next:NextFunction)=>{
         next(err)
     }
 })
-app.use((error:ErrorRequestHandler,req:Request,res:Response)=>{
+app.use((error:ErrorRequestHandler,req:Request,res:Response,next:NextFunction)=>{
     if(error instanceof Error){
         res.status(500).send({message:error.message})
         return 
@@ -94,5 +96,5 @@ app.use((error:ErrorRequestHandler,req:Request,res:Response)=>{
 })
  
 app.listen(process.env.PORT,()=>{
-    console.log('running')
+    console.log('running',process.env.PORT)
 })
